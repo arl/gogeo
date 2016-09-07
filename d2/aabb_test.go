@@ -1,4 +1,4 @@
-package gogeo
+package d2
 
 import "testing"
 
