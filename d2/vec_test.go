@@ -1,4 +1,4 @@
-package gogeo
+package d2
 
 import (
 	"math"
@@ -6,15 +6,15 @@ import (
 )
 
 var vec2AddSubTests = []struct {
-	v1, v2, v3 Vec2
+	v1, v2, v3 Vec
 }{
-	{Vec2{0, 0}, Vec2{0, 0}, Vec2{0, 0}},
-	{Vec2{0, 0}, Vec2{1, 1}, Vec2{1, 1}},
-	{Vec2{1, 1}, Vec2{0, 0}, Vec2{1, 1}},
-	{Vec2{-1, 1}, Vec2{1, -1}, Vec2{0, 0}},
+	{Vec{0, 0}, Vec{0, 0}, Vec{0, 0}},
+	{Vec{0, 0}, Vec{1, 1}, Vec{1, 1}},
+	{Vec{1, 1}, Vec{0, 0}, Vec{1, 1}},
+	{Vec{-1, 1}, Vec{1, -1}, Vec{0, 0}},
 }
 
-func TestVec2Add(t *testing.T) {
+func TestVecAdd(t *testing.T) {
 	for _, tt := range vec2AddSubTests {
 		res := tt.v1.Add(tt.v2)
 		if res != tt.v3 {
@@ -23,7 +23,7 @@ func TestVec2Add(t *testing.T) {
 	}
 }
 
-func TestVec2Sub(t *testing.T) {
+func TestVecSub(t *testing.T) {
 	for _, tt := range vec2AddSubTests {
 		res := tt.v3.Sub(tt.v2)
 		if res != tt.v1 {
@@ -33,16 +33,16 @@ func TestVec2Sub(t *testing.T) {
 }
 
 var vec2MulTests = []struct {
-	v1 Vec2
+	v1 Vec
 	f  float64
-	v2 Vec2
+	v2 Vec
 }{
-	{Vec2{0, 0}, 0, Vec2{0, 0}},
-	{Vec2{1, 1}, 1, Vec2{1, 1}},
-	{Vec2{-1, 1}, -1, Vec2{1, -1}},
+	{Vec{0, 0}, 0, Vec{0, 0}},
+	{Vec{1, 1}, 1, Vec{1, 1}},
+	{Vec{-1, 1}, -1, Vec{1, -1}},
 }
 
-func TestVec2Mul(t *testing.T) {
+func TestVecMul(t *testing.T) {
 	for _, tt := range vec2MulTests {
 		res := tt.v1.Mul(tt.f)
 		if res != tt.v2 {
@@ -52,16 +52,16 @@ func TestVec2Mul(t *testing.T) {
 }
 
 var vec2DivTests = []struct {
-	v1 Vec2
+	v1 Vec
 	f  float64
-	v2 Vec2
+	v2 Vec
 }{
-	{Vec2{0, 0}, 0, Vec2{math.NaN(), math.NaN()}},
-	{Vec2{1, 1}, 1, Vec2{1, 1}},
-	{Vec2{-1, 1}, -1, Vec2{1, -1}},
+	{Vec{0, 0}, 0, Vec{math.NaN(), math.NaN()}},
+	{Vec{1, 1}, 1, Vec{1, 1}},
+	{Vec{-1, 1}, -1, Vec{1, -1}},
 }
 
-func TestVec2Div(t *testing.T) {
+func TestVecDiv(t *testing.T) {
 	for _, tt := range vec2DivTests {
 		res := tt.v1.Div(tt.f)
 		// check for NaN
@@ -74,16 +74,16 @@ func TestVec2Div(t *testing.T) {
 }
 
 var vec2DotTests = []struct {
-	v1, v2 Vec2
+	v1, v2 Vec
 	f      float64
 }{
-	{Vec2{1, 1}, Vec2{1, 1}, 2},
-	{Vec2{1, 1}, Vec2{-1, -1}, -2},
-	{Vec2{1, 1}, Vec2{1, -1}, 0},
-	{Vec2{1, 1}, Vec2{-1, 1}, 0},
+	{Vec{1, 1}, Vec{1, 1}, 2},
+	{Vec{1, 1}, Vec{-1, -1}, -2},
+	{Vec{1, 1}, Vec{1, -1}, 0},
+	{Vec{1, 1}, Vec{-1, 1}, 0},
 }
 
-func TestVec2Dot(t *testing.T) {
+func TestVecDot(t *testing.T) {
 	for _, tt := range vec2DotTests {
 		res := tt.v1.Dot(tt.v2)
 		if res != tt.f {
@@ -93,17 +93,17 @@ func TestVec2Dot(t *testing.T) {
 }
 
 var vec2LenTests = []struct {
-	v1 Vec2
+	v1 Vec
 	f  float64
 }{
-	{Vec2{1, 1}, math.Sqrt2},
-	{Vec2{1, 0}, 1},
-	{Vec2{-1, 0}, 1},
-	{Vec2{0, 1}, 1},
-	{Vec2{0, -1}, 1},
+	{Vec{1, 1}, math.Sqrt2},
+	{Vec{1, 0}, 1},
+	{Vec{-1, 0}, 1},
+	{Vec{0, 1}, 1},
+	{Vec{0, -1}, 1},
 }
 
-func TestVec2Len(t *testing.T) {
+func TestVecLen(t *testing.T) {
 	for _, tt := range vec2LenTests {
 		res := tt.v1.Len()
 		if res != tt.f {

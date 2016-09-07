@@ -4,7 +4,7 @@
 //
 // Part of this code has been inspired from golang/image/math/f32
 
-package gogeo
+package d2
 
 // Path is a sequence of points represented by 2D vectors
-type Path []Vec2
+type Path []Vec

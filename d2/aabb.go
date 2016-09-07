@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 //
 
-package gogeo
+package d2
 
 import (
 	"math"
@@ -22,17 +22,17 @@ func NewBoundingBox(xa, xb, ya, yb float64) BoundingBox {
 	return BoundingBox{math.Min(xa, xb), math.Max(xa, xb), math.Min(ya, yb), math.Max(ya, yb)}
 }
 
-func NewBoundingBoxFromCircle(center Vec2, radius float64) BoundingBox {
+func NewBoundingBoxFromCircle(center Vec, radius float64) BoundingBox {
 	x, y := center.Elem()
 	return BoundingBox{x - radius, x + radius, y - radius, y + radius}
 }
 
-func (b BoundingBox) TopLeft() Vec2 {
-	return Vec2{b.MinX, b.MinY}
+func (b BoundingBox) TopLeft() Vec {
+	return Vec{b.MinX, b.MinY}
 }
 
-func (b BoundingBox) BottomRight() Vec2 {
-	return Vec2{b.MaxX, b.MaxY}
+func (b BoundingBox) BottomRight() Vec {
+	return Vec{b.MaxX, b.MaxY}
 }
 
 func (b BoundingBox) SizeX() float64 {
@@ -43,8 +43,8 @@ func (b BoundingBox) SizeY() float64 {
 	return b.MaxY - b.MinY
 }
 
-func (b BoundingBox) Center() Vec2 {
-	return Vec2{(b.MinX + b.MaxX) / 2, (b.MinY + b.MaxY) / 2}
+func (b BoundingBox) Center() Vec {
+	return Vec{(b.MinX + b.MaxX) / 2, (b.MinY + b.MaxY) / 2}
 }
 
 // Returns true if o intersects this
@@ -60,9 +60,9 @@ func (b BoundingBox) Contains(o BoundingBox) bool {
 }
 
 // Xlate performs a translation of the bounding box
-func (b *BoundingBox) Xlate(v Vec2) {
-	min := Vec2{b.MinX, b.MinY}
-	max := Vec2{b.MaxX, b.MaxY}
+func (b *BoundingBox) Xlate(v Vec) {
+	min := Vec{b.MinX, b.MinY}
+	max := Vec{b.MaxX, b.MaxY}
 	b.MinX, b.MinY = min.Add(v).Elem()
 	b.MaxX, b.MaxY = max.Add(v).Elem()
 }
