@@ -139,9 +139,9 @@ func V(x, y float64) Vec {
 	return Vec{x, y}
 }
 
-// String returns a string representation of p like "(3,4)".
-func (v *Vec) String() string {
-	return fmt.Sprintf("(%f,%f)", v.X, v.Y)
+// String returns a string representation of v like "(3,4)".
+func (v Vec) String() string {
+	return fmt.Sprintf("(%.4g,%.4g)", v.X, v.Y)
 }
 
 func (v *Vec) Set(s string) error {

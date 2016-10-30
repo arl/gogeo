@@ -4,6 +4,8 @@
 
 package d2
 
+import "fmt"
+
 // Rectangler is the interface implemented by objects that can return a
 // rectangular representation of themselves.
 type Rectangler interface {
@@ -192,4 +194,9 @@ func RectWH(x, y, w, h float64) Rectangle {
 // center c and radius r
 func RectFromCircle(c Vec, r float64) Rectangle {
 	return RectWH(c.X-r, c.Y-r, 2*r, 2*r)
+}
+
+// String returns a string representation of r.
+func (r Rectangle) String() string {
+	return fmt.Sprintf("(Min:%v,Max:%v)", r.Min, r.Max)
 }
