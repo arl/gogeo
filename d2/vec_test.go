@@ -66,8 +66,8 @@ func TestVecDiv(t *testing.T) {
 		res := tt.v1.Div(tt.f)
 		// check for NaN
 		if res != tt.v2 &&
-			(math.IsNaN(res.X()) != math.IsNaN(tt.v2.X())) ||
-			(math.IsNaN(res.Y()) != math.IsNaN(tt.v2.Y())) {
+			(math.IsNaN(res.X) != math.IsNaN(tt.v2.X)) ||
+			(math.IsNaN(res.Y) != math.IsNaN(tt.v2.Y)) {
 			t.Errorf("%v / %v => %v want %v", tt.v1, tt.f, res, tt.v2)
 		}
 	}
