@@ -113,3 +113,11 @@ func TestRectangle(t *testing.T) {
 		}
 	}
 }
+
+func TestRectangleCanon(t *testing.T) {
+	r1 := Rect(1, 2, 3, 4)
+	r2 := Rect(3, 4, 1, 2)
+	if r1 != r2.Canon() {
+		t.Errorf("Canon: r1 != r2.Canon(), want ==")
+	}
+}
