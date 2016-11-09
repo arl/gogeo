@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/aurelien-rainone/gogeo"
+	"github.com/aurelien-rainone/gogeo/f64"
 )
 
 //go:generate go-gencon -type Vec -cont Stack -name VecStack
@@ -100,10 +100,10 @@ func (v Vec) Normalize() Vec {
 // ApproxEqual takes in a vector and does an element-wise
 // approximate float comparison as if FloatEqual had been used
 func (v Vec) ApproxEqual(v2 Vec) bool {
-	if !gogeo.FloatEqual(v.X, v2.X) {
+	if !f64.FloatEqual(v.X, v2.X) {
 		return false
 	}
-	if !gogeo.FloatEqual(v.Y, v2.Y) {
+	if !f64.FloatEqual(v.Y, v2.Y) {
 		return false
 	}
 	return true
@@ -112,10 +112,10 @@ func (v Vec) ApproxEqual(v2 Vec) bool {
 // ApproxThresholdEq takes in a threshold for comparing two floats, and uses it
 // to do an element-wise comparison of the vector to another.
 func (v Vec) ApproxEqualThreshold(v2 Vec, threshold float64) bool {
-	if !gogeo.FloatEqualThreshold(v.X, v2.X, threshold) {
+	if !f64.FloatEqualThreshold(v.X, v2.X, threshold) {
 		return false
 	}
-	if !gogeo.FloatEqualThreshold(v.Y, v2.Y, threshold) {
+	if !f64.FloatEqualThreshold(v.Y, v2.Y, threshold) {
 		return false
 	}
 	return true

@@ -4,7 +4,7 @@
 //
 // Part of this code has been inspired from golang/image/math/f32
 
-package gogeo
+package f64
 
 import (
 	"math"
