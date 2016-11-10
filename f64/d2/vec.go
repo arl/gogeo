@@ -13,8 +13,6 @@ import (
 	"github.com/aurelien-rainone/gogeo/f64"
 )
 
-//go:generate go-gencon -type Vec -cont Stack -name VecStack
-
 // Vec is an X, Y coordinate pair. The axes increase right and down.
 type Vec struct {
 	X, Y float64
