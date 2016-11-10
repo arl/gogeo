@@ -15,7 +15,7 @@ import (
 // it returns the high threshold. Otherwise it returns the value.
 //
 // Useful to prevent some functions from freaking out because a value was
-// teeeeechnically out of range.
+// technically out of range.
 func Clamp(a, low, high float64) float64 {
 	if a < low {
 		return low
@@ -34,9 +34,9 @@ func ClampFunc(low, high float64) func(float64) float64 {
 	}
 }
 
-// IsClamped uses strict equality (meaning: not the FloatEqual function) there
-// shouldn't be any major issues with this since clamp is often used to fix minor
-//i errors
+// IsClamped uses strict equality (meaning: not the Approx function) there
+// shouldn't be any major issues with this since clamp is often used to fix
+// minor errors.
 //
 // Checks if a is clamped between low and high as if
 // Clamp(a, low, high) had been called.
@@ -60,13 +60,14 @@ func SetMax(a *float64, b float64) {
 	}
 }
 
-// Round shortens a float64 value to a specified precision (number of digits after the decimal point)
-// with "round half up" tie-braking rule. Half-way values (23.5) are always rounded up (24).
-func Round(v float64, precision int) float64 {
-	p := float64(precision)
-	t := float64(v) * math.Pow(10, p)
+// Round shortens a float64 value to a specified precision (number of digits
+// after the decimal point) with "round half up" tie-breaking rule. Half-way
+// values (23.5) are always rounded up (24).
+func Round(v float64, prec int) float64 {
+	p := float64(prec)
+	t := v * math.Pow(10, p)
 	if t > 0 {
-		return float64(math.Floor(t+0.5) / math.Pow(10, p))
+		return math.Floor(t+0.5) / math.Pow(10, p)
 	}
-	return float64(math.Ceil(t-0.5) / math.Pow(10, p))
+	return math.Ceil(t-0.5) / math.Pow(10, p)
 }
