@@ -9,7 +9,6 @@ package d2
 import (
 	"fmt"
 
-	"github.com/aurelien-rainone/gogeo/f32"
 	"github.com/aurelien-rainone/math32"
 )
 
@@ -97,27 +96,28 @@ func (v Vec) Normalize() Vec {
 	return Vec{v.X * l, v.Y * l}
 }
 
-// ApproxEqual takes in a vector and does an element-wise
-// approximate float comparison as if FloatEqual had been used
-// TODO: use math32.Approx instead
-func (v Vec) ApproxEqual(v2 Vec) bool {
-	if !f32.Approx(v.X, v2.X) {
+// Approx reports wether v2 is approximately equal to v.
+//
+// Element-wise approximation uses math32.Approx()
+func (v Vec) Approx(v2 Vec) bool {
+	if !math32.Approx(v.X, v2.X) {
 		return false
 	}
-	if !f32.Approx(v.Y, v2.Y) {
+	if !math32.Approx(v.Y, v2.Y) {
 		return false
 	}
 	return true
 }
 
-// ApproxThresholdEq takes in a threshold for comparing two floats, and uses it
-// to do an element-wise comparison of the vector to another.
-// TODO: use math32.Approx instead (probably will need math32.ApproxThreshold)
-func (v Vec) ApproxEqualThreshold(v2 Vec, threshold float32) bool {
-	if !f32.FloatEqualThreshold(v.X, v2.X, threshold) {
+// ApproxEpsilon reports wether v2 is approximately equal to v, using provided
+// epsilon value.
+//
+// Element-wise approximation uses math32.ApproxEpsilon()
+func (v Vec) ApproxEpsilon(v2 Vec, threshold float32) bool {
+	if !math32.ApproxEpsilon(v.X, v2.X, threshold) {
 		return false
 	}
-	if !f32.FloatEqualThreshold(v.Y, v2.Y, threshold) {
+	if !math32.ApproxEpsilon(v.Y, v2.Y, threshold) {
 		return false
 	}
 	return true
