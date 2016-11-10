@@ -7,7 +7,7 @@ var (
 )
 
 func init() {
-	epsilon64 = math.Nextafter64(1, 2) - 1
+	epsilon64 = math.Nextafter(1, 2) - 1
 }
 
 // Approx returns true if x ~= y
