@@ -3,6 +3,8 @@ package d2
 import (
 	"math"
 	"testing"
+
+	"github.com/aurelien-rainone/math32"
 )
 
 var vec2AddSubTests = []struct {
@@ -34,7 +36,7 @@ func TestVecSub(t *testing.T) {
 
 var vec2MulTests = []struct {
 	v1 Vec
-	f  float64
+	f  float32
 	v2 Vec
 }{
 	{Vec{0, 0}, 0, Vec{0, 0}},
@@ -53,10 +55,10 @@ func TestVecMul(t *testing.T) {
 
 var vec2DivTests = []struct {
 	v1 Vec
-	f  float64
+	f  float32
 	v2 Vec
 }{
-	{Vec{0, 0}, 0, Vec{math.NaN(), math.NaN()}},
+	{Vec{0, 0}, 0, Vec{math32.NaN(), math32.NaN()}},
 	{Vec{1, 1}, 1, Vec{1, 1}},
 	{Vec{-1, 1}, -1, Vec{1, -1}},
 }
@@ -66,8 +68,8 @@ func TestVecDiv(t *testing.T) {
 		res := tt.v1.Div(tt.f)
 		// check for NaN
 		if res != tt.v2 &&
-			(math.IsNaN(res.X) != math.IsNaN(tt.v2.X)) ||
-			(math.IsNaN(res.Y) != math.IsNaN(tt.v2.Y)) {
+			(math32.IsNaN(res.X) != math32.IsNaN(tt.v2.X)) ||
+			(math32.IsNaN(res.Y) != math32.IsNaN(tt.v2.Y)) {
 			t.Errorf("%v / %v => %v want %v", tt.v1, tt.f, res, tt.v2)
 		}
 	}
@@ -75,7 +77,7 @@ func TestVecDiv(t *testing.T) {
 
 var vec2DotTests = []struct {
 	v1, v2 Vec
-	f      float64
+	f      float32
 }{
 	{Vec{1, 1}, Vec{1, 1}, 2},
 	{Vec{1, 1}, Vec{-1, -1}, -2},
@@ -94,7 +96,7 @@ func TestVecDot(t *testing.T) {
 
 var vec2LenTests = []struct {
 	v1 Vec
-	f  float64
+	f  float32
 }{
 	{Vec{1, 1}, math.Sqrt2},
 	{Vec{1, 0}, 1},
