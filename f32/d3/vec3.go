@@ -1,6 +1,10 @@
 package d3
 
-import "github.com/aurelien-rainone/math32"
+import (
+	"fmt"
+
+	"github.com/aurelien-rainone/math32"
+)
 
 type Vec3 []float32
 
@@ -12,6 +16,9 @@ func NewVec3() Vec3 {
 func NewVec3XYZ(x, y, z float32) Vec3 {
 	return Vec3{x, y, z}
 }
+
+// C-like Vec3 API
+//////////////////
 
 // Vec3Add performs a vector addition. dest = v1 + v2
 //
@@ -62,9 +69,9 @@ func Vec3Copy(dest, a Vec3) {
 //     mn  [in,out] A vector, will be updated with the result.
 //     v   [in]     A vector.
 func Vec3Min(mn, v Vec3) {
-	mn[0] = dtMin(mn[0], v[0])
-	mn[1] = dtMin(mn[1], v[1])
-	mn[2] = dtMin(mn[2], v[2])
+	mn[0] = math32.Min(mn[0], v[0])
+	mn[1] = math32.Min(mn[1], v[1])
+	mn[2] = math32.Min(mn[2], v[2])
 }
 
 // Vec3Max selects the maximum value of each element from the specified vectors.
@@ -72,9 +79,9 @@ func Vec3Min(mn, v Vec3) {
 //     mx  [in,out] A vector, will be updated with the result.
 //     v   [in]     A vector.
 func Vec3Max(mx, v Vec3) {
-	mx[0] = dtMax(mx[0], v[0])
-	mx[1] = dtMax(mx[1], v[1])
-	mx[2] = dtMax(mx[2], v[2])
+	mx[0] = math32.Max(mx[0], v[0])
+	mx[1] = math32.Max(mx[1], v[1])
+	mx[2] = math32.Max(mx[2], v[2])
 }
 
 // Vec3LenSqr derives the square of the scalar length of the vector. (len * len)
@@ -121,33 +128,100 @@ func Vec3Dot(v1, v2 Vec3) float32 {
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
 }
 
-// Vec3Dot2D derives the dot product of two vectors on the xz-plane. dest = u . v
+// Object-like Vec3 API
+///////////////////////
+
+// Add performs a vector addition. v += v1
+func (v Vec3) Add(v1 Vec3) {
+	v[0] += v1[0]
+	v[1] += v1[1]
+	v[2] += v1[2]
+}
+
+// SAdd performs a scaled vector addition. v += (v1 * s)
+func (v Vec3) SAdd(v1 Vec3, s float32) {
+	v[0] += v1[0] * s
+	v[1] += v1[1] * s
+	v[2] += v1[2] * s
+}
+
+// Sub performs a vector subtraction. v -= v2.
+func (v Vec3) Sub(v1 Vec3) {
+	v[0] -= v1[0]
+	v[1] -= v1[1]
+	v[2] -= v1[2]
+}
+
+// Copy performs a vector copy. v1 = v
+func (v Vec3) Copy(v1 Vec3) {
+	v1[0] = v[0]
+	v1[1] = v[1]
+	v1[2] = v[2]
+}
+
+// LenSqr derives the square of the scalar length of the vector. (len * len)
+func (v Vec3) LenSqr() float32 {
+	return v[0]*v[0] + v[1]*v[1] + v[2]*v[2]
+}
+
+// Dist returns the distance between v and v1. d = dist(v, v2)
+func (v Vec3) Dist(v1 Vec3) float32 {
+	dx := v1[0] - v[0]
+	dy := v1[1] - v[1]
+	dz := v1[2] - v[2]
+	return math32.Sqrt(dx*dx + dy*dy + dz*dz)
+}
+
+// Lerp returns the result vector of a linear interpolation between two
+// vectors. v toward v1.
 //
-//     u      [in]  A Vector.
-//     v      [in]  A vector.
+// The interpolation factor t should be comprised betwenn 0 and 1.0.
+// [Limits: 0 <= value <= 1.0]
+func (v Vec3) Lerp(dest, v1 Vec3, t float32) Vec3 {
+	return Vec3{
+		v[0] + (v1[0]-v[0])*t,
+		v[1] + (v1[1]-v[1])*t,
+		v[2] + (v1[2]-v[2])*t,
+	}
+}
+
+// Cross returns the cross product of two vectors. v x v1
+func (v Vec3) Cross(v1 Vec3) Vec3 {
+	return Vec3{
+		v[1]*v1[2] - v[2]*v1[1],
+		v[2]*v1[0] - v[0]*v1[2],
+		v[0]*v1[1] - v[1]*v1[0],
+	}
+}
+
+// Dot derives the dot product of two vectors. v . v1
+func (v Vec3) Dot(v1 Vec3) float32 {
+	return v[0]*v1[0] + v[1]*v1[1] + v[2]*v1[2]
+}
+
+// Vec3Dot2D derives the dot product of two vectors on the xz-plane. u . v
 // The vectors are projected onto the xz-plane, so the y-values are ignored.
 func Vec3Dot2D(u, v Vec3) float32 {
 	return u[0]*v[0] + u[2]*v[2]
 }
 
-/// Returns the minimum of two float32 values.
-///  @param[in]        a    Value A
-///  @param[in]        b    Value B
-///  @return The minimum of the two values.
-func dtMin(a, b float32) float32 {
-	if a < b {
-		return a
-	}
-	return b
+// Approx reports wether v and v1 are approximately equal.
+//
+// Element-wise approximation uses math32.Approx()
+func (v Vec3) Approx(v1 Vec3) bool {
+	return math32.Approx(v[0], v1[0]) &&
+		math32.Approx(v[1], v1[1]) &&
+		math32.Approx(v[2], v1[2])
 }
 
-/// Returns the maximum of two values.
-///  @param[in]        a    Value A
-///  @param[in]        b    Value B
-///  @return The maximum of the two values.
-func dtMax(a, b float32) float32 {
-	if a > b {
-		return a
+// String returns a string representation of v like "(3,4)".
+func (v Vec3) String() string {
+	return fmt.Sprintf("(%.4g,%.4g,%.4g)", v[0], v[1], v[2])
+}
+
+func (v *Vec3) Set(s string) error {
+	if _, err := fmt.Sscanf(s, "(%f,%f,%f)", (*v)[0], (*v)[1], (*v)[2]); err != nil {
+		return fmt.Errorf("invalid syntax \"%s\"", s)
 	}
-	return b
+	return nil
 }

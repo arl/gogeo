@@ -25,13 +25,9 @@ func TestVcross(t *testing.T) {
 
 	for _, tt := range vecTests {
 		dst := NewVec3()
-		Vec3Cross(dst[:], tt.v1[:], tt.v2[:])
-
-		for i := range dst {
-			c := math32.Approx(tt.want[i], dst[i])
-			if !c {
-				t.Errorf("want dst[%d] (%f) ~= %f, got !=", i, dst[i], tt.want[i])
-			}
+		Vec3Cross(dst, tt.v1, tt.v2)
+		if !dst.Approx(tt.want) {
+			t.Errorf("%v x %v = %v, want %v", tt.v1, tt.v2, dst, tt.want)
 		}
 	}
 }
@@ -54,9 +50,9 @@ func TestVdot(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		got := Vec3Dot(tt.v1[:], tt.v2[:])
+		got := tt.v1.Dot(tt.v2)
 		if !math32.Approx(tt.want, got) {
-			t.Errorf("%v . %v, want %f, got %f", tt.v1, tt.v2, tt.want, got)
+			t.Errorf("%v . %v = %f, want %f", tt.v1, tt.v2, got, tt.want)
 		}
 	}
 }
