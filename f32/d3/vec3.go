@@ -31,13 +31,13 @@ func Vec3Add(dest, v1, v2 Vec3) {
 	dest[2] = v1[2] + v2[2]
 }
 
-// Vec3Mad performs a scaled vector addition. dest = v1 + (v2 * s)
+// Vec3SAdd performs a scaled vector addition. dest = v1 + (v2 * s)
 //
 //     dest   [out] The result vector.
 //     v1     [in]  The base vector.
 //     v1     [in]  The vector to scale and add to v1.
 //     s      [in]  The amount to scale v2 by before adding to v1.
-func Vec3Mad(dest, v1, v2 Vec3, s float32) {
+func Vec3SAdd(dest, v1, v2 Vec3, s float32) {
 	dest[0] = v1[0] + v2[0]*s
 	dest[1] = v1[1] + v2[1]*s
 	dest[2] = v1[2] + v2[2]*s
@@ -95,6 +95,22 @@ func Vec3Dist(v1, v2 Vec3) float32 {
 	dy := v2[1] - v1[1]
 	dz := v2[2] - v1[2]
 	return math32.Sqrt(dx*dx + dy*dy + dz*dz)
+}
+
+// Vec3DistSqr returns the square of the distance between two points.
+func Vec3DistSqr(v1, v2 Vec3) float32 {
+	dx := v2[0] - v1[0]
+	dy := v2[1] - v1[1]
+	dz := v2[2] - v1[2]
+	return dx*dx + dy*dy + dz*dz
+}
+
+// Vec3Normalize normalizes the vector.
+func Vec3Normalize(v Vec3) {
+	d := 1.0 / math32.Sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2])
+	v[0] *= d
+	v[1] *= d
+	v[2] *= d
 }
 
 // Vec3Lerp performs a linear interpolation between two vectors. v1 toward v2
@@ -170,6 +186,22 @@ func (v Vec3) Dist(v1 Vec3) float32 {
 	dy := v1[1] - v[1]
 	dz := v1[2] - v[2]
 	return math32.Sqrt(dx*dx + dy*dy + dz*dz)
+}
+
+// DistSqr returns the square of the distance between two points.
+func (v Vec3) DistSqr(v1 Vec3) float32 {
+	dx := v1[0] - v[0]
+	dy := v1[1] - v[1]
+	dz := v1[2] - v[2]
+	return dx*dx + dy*dy + dz*dz
+}
+
+// Normalize normalizes the vector.
+func (v Vec3) Normalize() {
+	d := 1.0 / math32.Sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2])
+	v[0] *= d
+	v[1] *= d
+	v[2] *= d
 }
 
 // Lerp returns the result vector of a linear interpolation between two
