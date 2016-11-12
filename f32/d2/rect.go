@@ -1,7 +1,3 @@
-// Copyright 2016 Aurélien Rainone. All rights reserved.
-// Use of this source code is governed by MIT license.
-// license that can be found in the LICENSE file.
-
 package d2
 
 import "fmt"
@@ -12,50 +8,98 @@ type Rectangler interface {
 	Rectangle() Rectangle
 }
 
-// A Rectangle contains the points with Min.X <= X < Max.X, Min.Y <= Y < Max.Y.
-// It is well-formed if Min.X <= Max.X and likewise for Y. Points are always
-// well-formed. A rectangle's methods always return well-formed outputs for
-// well-formed inputs.
+// A Rectangle is defined by 2 points, Min and Max, represented by 2 Vec2.
 type Rectangle struct {
-	Min, Max Vec
+	Min, Max Vec2
+}
+
+// ZR is the zero Rectangle.
+var ZR Rectangle
+
+func init() {
+	// allocate the vector of the ZR rectangle
+	ZR = Rectangle{Min: NewVec2(), Max: NewVec2()}
+}
+
+// Rect is shorthand for Rectangle{Vec2(x0, y0), Vec2(x1, y1)}. The returned
+// rectangle has minimum and maximum coordinates swapped if necessary so that
+// it is well-formed.
+func Rect(x0, y0, x1, y1 float32) Rectangle {
+	if x0 > x1 {
+		x0, x1 = x1, x0
+	}
+	if y0 > y1 {
+		y0, y1 = y1, y0
+	}
+	return Rectangle{Vec2{x0, y0}, Vec2{x1, y1}}
+}
+
+// RectWH returns a rectangle whose origin is Vec2{x,y}, w and h are its width
+// and height.
+func RectWH(x, y, w, h float32) Rectangle {
+	return Rectangle{
+		Min: Vec2{x, y},
+		Max: Vec2{x + w, y + h},
+	}
+}
+
+// RectFromCircle returns the minimum rectangle that contains the circle of
+// center c and radius r
+func RectFromCircle(c Vec2, r float32) Rectangle {
+	return RectWH(c[0]-r, c[1]-r, 2*r, 2*r)
+}
+
+func NewRect() Rectangle {
+	return Rectangle{
+		Min: NewVec2(),
+		Max: NewVec2(),
+	}
+}
+
+// CopyRect allocates and returns a new Rectangle that is the copy of r.
+func CopyRect(r Rectangle) Rectangle {
+	r1 := NewRect()
+	r1.Min.Assign(r.Min)
+	r1.Max.Assign(r.Max)
+	return r1
 }
 
 // Returns the center of r.
-func (r Rectangle) Center() Vec {
-	return r.Min.Add(r.Max.Div(2))
+func (r Rectangle) Center() Vec2 {
+	return r.Size().Scale(0.5).Add(r.Min)
 }
 
 // Dx returns r's width.
 func (r Rectangle) Dx() float32 {
-	return r.Max.X - r.Min.X
+	return r.Max[0] - r.Min[0]
 }
 
 // Dy returns r's height.
 func (r Rectangle) Dy() float32 {
-	return r.Max.Y - r.Min.Y
+	return r.Max[1] - r.Min[1]
 }
 
 // Size returns r's width and height.
-func (r Rectangle) Size() Vec {
-	return Vec{
-		r.Max.X - r.Min.X,
-		r.Max.Y - r.Min.Y,
+func (r Rectangle) Size() Vec2 {
+	return Vec2{
+		r.Max[0] - r.Min[0],
+		r.Max[1] - r.Min[1],
 	}
 }
 
 // Add returns the rectangle r translated by v.
-func (r Rectangle) Add(v Vec) Rectangle {
+func (r Rectangle) Add(v Vec2) Rectangle {
 	return Rectangle{
-		Vec{r.Min.X + v.X, r.Min.Y + v.Y},
-		Vec{r.Max.X + v.X, r.Max.Y + v.Y},
+		Vec2{r.Min[0] + v[0], r.Min[1] + v[1]},
+		Vec2{r.Max[0] + v[0], r.Max[1] + v[1]},
 	}
 }
 
 // Sub returns the rectangle r translated by -v.
-func (r Rectangle) Sub(v Vec) Rectangle {
+func (r Rectangle) Sub(v Vec2) Rectangle {
 	return Rectangle{
-		Vec{r.Min.X - v.X, r.Min.Y - v.Y},
-		Vec{r.Max.X - v.X, r.Max.Y - v.Y},
+		Vec2{r.Min[0] - v[0], r.Min[1] - v[1]},
+		Vec2{r.Max[0] - v[0], r.Max[1] - v[1]},
 	}
 }
 
@@ -64,18 +108,18 @@ func (r Rectangle) Sub(v Vec) Rectangle {
 // of r will be returned.
 func (r Rectangle) Inset(n float32) Rectangle {
 	if r.Dx() < 2*n {
-		r.Min.X = (r.Min.X + r.Max.X) / 2
-		r.Max.X = r.Min.X
+		r.Min[0] = (r.Min[0] + r.Max[0]) / 2
+		r.Max[0] = r.Min[0]
 	} else {
-		r.Min.X += n
-		r.Max.X -= n
+		r.Min[0] += n
+		r.Max[0] -= n
 	}
 	if r.Dy() < 2*n {
-		r.Min.Y = (r.Min.Y + r.Max.Y) / 2
-		r.Max.Y = r.Min.Y
+		r.Min[1] = (r.Min[1] + r.Max[1]) / 2
+		r.Max[1] = r.Min[1]
 	} else {
-		r.Min.Y += n
-		r.Max.Y -= n
+		r.Min[1] += n
+		r.Max[1] -= n
 	}
 	return r
 }
@@ -83,22 +127,23 @@ func (r Rectangle) Inset(n float32) Rectangle {
 // Intersect returns the largest rectangle contained by both r and s. If the
 // two rectangles do not overlap then the zero rectangle will be returned.
 func (r Rectangle) Intersect(s Rectangle) Rectangle {
-	if r.Min.X < s.Min.X {
-		r.Min.X = s.Min.X
+	ir := Rect(r.Min[0], r.Min[1], r.Max[0], r.Max[1])
+	if ir.Min[0] < s.Min[0] {
+		ir.Min[0] = s.Min[0]
 	}
-	if r.Min.Y < s.Min.Y {
-		r.Min.Y = s.Min.Y
+	if ir.Min[1] < s.Min[1] {
+		ir.Min[1] = s.Min[1]
 	}
-	if r.Max.X > s.Max.X {
-		r.Max.X = s.Max.X
+	if ir.Max[0] > s.Max[0] {
+		ir.Max[0] = s.Max[0]
 	}
-	if r.Max.Y > s.Max.Y {
-		r.Max.Y = s.Max.Y
+	if ir.Max[1] > s.Max[1] {
+		ir.Max[1] = s.Max[1]
 	}
-	if r.Min.X > r.Max.X || r.Min.Y > r.Max.Y {
+	if ir.Min[0] > ir.Max[0] || ir.Min[1] > ir.Max[1] {
 		return ZR
 	}
-	return r
+	return ir
 }
 
 // Union returns the smallest rectangle that contains both r and s.
@@ -109,91 +154,67 @@ func (r Rectangle) Union(s Rectangle) Rectangle {
 	if s.Empty() {
 		return r
 	}
-	if r.Min.X > s.Min.X {
-		r.Min.X = s.Min.X
+	if r.Min[0] > s.Min[0] {
+		r.Min[0] = s.Min[0]
 	}
-	if r.Min.Y > s.Min.Y {
-		r.Min.Y = s.Min.Y
+	if r.Min[1] > s.Min[1] {
+		r.Min[1] = s.Min[1]
 	}
-	if r.Max.X < s.Max.X {
-		r.Max.X = s.Max.X
+	if r.Max[0] < s.Max[0] {
+		r.Max[0] = s.Max[0]
 	}
-	if r.Max.Y < s.Max.Y {
-		r.Max.Y = s.Max.Y
+	if r.Max[1] < s.Max[1] {
+		r.Max[1] = s.Max[1]
 	}
 	return r
 }
 
 // Empty reports whether the rectangle contains no points.
 func (r Rectangle) Empty() bool {
-	return r.Min.X >= r.Max.X || r.Min.Y >= r.Max.Y
+	return r.Min[0] >= r.Max[0] || r.Min[1] >= r.Max[1]
 }
 
 // Eq reports whether r and s contain the same set of points. All empty
 // rectangles are considered equal.
 func (r Rectangle) Eq(s Rectangle) bool {
-	return r == s || r.Empty() && s.Empty()
+	return (r.Min.Approx(s.Min) && r.Max.Approx(s.Max)) ||
+		r.Empty() && s.Empty()
 }
 
 // Overlaps reports whether r and s have a non-empty intersection.
 func (r Rectangle) Overlaps(s Rectangle) bool {
 	return !r.Empty() && !s.Empty() &&
-		r.Min.X < s.Max.X && s.Min.X < r.Max.X &&
-		r.Min.Y < s.Max.Y && s.Min.Y < r.Max.Y
+		r.Min[0] < s.Max[0] && s.Min[0] < r.Max[0] &&
+		r.Min[1] < s.Max[1] && s.Min[1] < r.Max[1]
 }
 
-// In reports whether every point in r is in s.
+// Contains reports whether rectangle r contains point p
+func (r Rectangle) Contains(p Vec2) bool {
+	return r.Min[0] <= p[0] && p[0] < r.Max[0] &&
+		r.Min[1] <= p[1] && p[1] < r.Max[1]
+}
+
+// In reports whether Rectangle r is contained in s.
 func (r Rectangle) In(s Rectangle) bool {
 	if r.Empty() {
 		return true
 	}
 	// Note that r.Max is an exclusive bound for r, so that r.In(s)
 	// does not require that r.Max.In(s).
-	return s.Min.X <= r.Min.X && r.Max.X <= s.Max.X &&
-		s.Min.Y <= r.Min.Y && r.Max.Y <= s.Max.Y
+	return s.Min[0] <= r.Min[0] && r.Max[0] <= s.Max[0] &&
+		s.Min[1] <= r.Min[1] && r.Max[1] <= s.Max[1]
 }
 
 // Canon returns the canonical version of r. The returned rectangle has minimum
 // and maximum coordinates swapped if necessary so that it is well-formed.
 func (r Rectangle) Canon() Rectangle {
-	if r.Max.X < r.Min.X {
-		r.Min.X, r.Max.X = r.Max.X, r.Min.X
+	if r.Max[0] < r.Min[0] {
+		r.Min[0], r.Max[0] = r.Max[0], r.Min[0]
 	}
-	if r.Max.Y < r.Min.Y {
-		r.Min.Y, r.Max.Y = r.Max.Y, r.Min.Y
+	if r.Max[1] < r.Min[1] {
+		r.Min[1], r.Max[1] = r.Max[1], r.Min[1]
 	}
 	return r
-}
-
-// ZR is the zero Rectangle.
-var ZR Rectangle
-
-// Rect is shorthand for Rectangle{Vec(x0, y0), Vec(x1, y1)}. The returned
-// rectangle has minimum and maximum coordinates swapped if necessary so that
-// it is well-formed.
-func Rect(x0, y0, x1, y1 float32) Rectangle {
-	if x0 > x1 {
-		x0, x1 = x1, x0
-	}
-	if y0 > y1 {
-		y0, y1 = y1, y0
-	}
-	return Rectangle{Vec{x0, y0}, Vec{x1, y1}}
-}
-
-// RectWH returns a rectangle whose origin is Vec{x,y}, w and h are its width
-// and height.
-func RectWH(x, y, w, h float32) Rectangle {
-	return Rectangle{
-		Min: Vec{x, y},
-		Max: Vec{x + w, y + h},
-	}
-}
-
-// RectFromCircle returns the minimum rectangle that contains the circle of
-// center c and radius r
-func RectFromCircle(c Vec, r float32) Rectangle {
-	return RectWH(c.X-r, c.Y-r, 2*r, 2*r)
 }
 
 // String returns a string representation of r.

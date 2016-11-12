@@ -4,28 +4,9 @@
 
 package d2
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
 func TestRectangle(t *testing.T) {
-	// in checks that every point in f is in g.
-	in := func(f, g Rectangle) error {
-		if !f.In(g) {
-			return fmt.Errorf("f=%s, f.In(%s): got false, want true", f, g)
-		}
-		for y := f.Min.Y; y < f.Max.Y; y++ {
-			for x := f.Min.X; x < f.Max.X; x++ {
-				p := Vec{x, y}
-				if !p.In(g) {
-					return fmt.Errorf("p=%s, p.In(%s): got false, want true", p, g)
-				}
-			}
-		}
-		return nil
-	}
-
 	rects := []Rectangle{
 		Rect(0, 0, 10, 10),
 		Rect(1, 2, 3, 4),
@@ -44,7 +25,7 @@ func TestRectangle(t *testing.T) {
 	for _, r := range rects {
 		for _, s := range rects {
 			got := r.Eq(s)
-			want := in(r, s) == nil && in(s, r) == nil
+			want := r.In(s) && s.In(r)
 			if got != want {
 				t.Errorf("Eq: r=%s, s=%s: got %t, want %t", r, s, got, want)
 			}
@@ -56,27 +37,27 @@ func TestRectangle(t *testing.T) {
 	for _, r := range rects {
 		for _, s := range rects {
 			a := r.Intersect(s)
-			if err := in(a, r); err != nil {
-				t.Errorf("Intersect: r=%s, s=%s, a=%s, a not in r: %v", r, s, a, err)
+			if !a.In(r) {
+				t.Errorf("Intersect: r=%s, s=%s, a=%s, a not in r", r, s, a)
 			}
-			if err := in(a, s); err != nil {
-				t.Errorf("Intersect: r=%s, s=%s, a=%s, a not in s: %v", r, s, a, err)
+			if !a.In(s) {
+				t.Errorf("Intersect: r=%s, s=%s, a=%s, a not in s", r, s, a)
 			}
 			if a.Empty() == r.Overlaps(s) {
 				t.Errorf("Intersect: r=%s, s=%s, a=%s: empty=%t same as overlaps=%t",
 					r, s, a, a.Empty(), r.Overlaps(s))
 			}
-			largerThanA := [4]Rectangle{a, a, a, a}
-			largerThanA[0].Min.X--
-			largerThanA[1].Min.Y--
-			largerThanA[2].Max.X++
-			largerThanA[3].Max.Y++
+			largerThanA := [4]Rectangle{CopyRect(a), CopyRect(a), CopyRect(a), CopyRect(a)}
+			largerThanA[0].Min[0] -= 1
+			largerThanA[1].Min[1] -= 1
+			largerThanA[2].Max[0] += 1
+			largerThanA[3].Max[1] += 1
 			for i, b := range largerThanA {
 				if b.Empty() {
 					// b isn't actually larger than a.
 					continue
 				}
-				if in(b, r) == nil && in(b, s) == nil {
+				if b.In(r) && b.In(s) {
 					t.Errorf("Intersect: r=%s, s=%s, a=%s, b=%s, i=%d: intersection could be larger",
 						r, s, a, b, i)
 				}
@@ -89,23 +70,23 @@ func TestRectangle(t *testing.T) {
 	for _, r := range rects {
 		for _, s := range rects {
 			a := r.Union(s)
-			if err := in(r, a); err != nil {
-				t.Errorf("Union: r=%s, s=%s, a=%s, r not in a: %v", r, s, a, err)
+			if !r.In(a) {
+				t.Errorf("Union: r=%s, s=%s, a=%s, r not in a", r, s, a)
 			}
-			if err := in(s, a); err != nil {
-				t.Errorf("Union: r=%s, s=%s, a=%s, s not in a: %v", r, s, a, err)
+			if !s.In(a) {
+				t.Errorf("Union: r=%s, s=%s, a=%s, s not in a", r, s, a)
 			}
 			if a.Empty() {
 				// You can't get any smaller than a.
 				continue
 			}
-			smallerThanA := [4]Rectangle{a, a, a, a}
-			smallerThanA[0].Min.X++
-			smallerThanA[1].Min.Y++
-			smallerThanA[2].Max.X--
-			smallerThanA[3].Max.Y--
+			smallerThanA := [4]Rectangle{CopyRect(a), CopyRect(a), CopyRect(a), CopyRect(a)}
+			smallerThanA[0].Min[0]++
+			smallerThanA[1].Min[1]++
+			smallerThanA[2].Max[0]--
+			smallerThanA[3].Max[1]--
 			for i, b := range smallerThanA {
-				if in(r, b) == nil && in(s, b) == nil {
+				if r.In(b) && s.In(b) {
 					t.Errorf("Union: r=%s, s=%s, a=%s, b=%s, i=%d: union could be smaller",
 						r, s, a, b, i)
 				}
@@ -117,7 +98,7 @@ func TestRectangle(t *testing.T) {
 func TestRectangleCanon(t *testing.T) {
 	r1 := Rect(1, 2, 3, 4)
 	r2 := Rect(3, 4, 1, 2)
-	if r1 != r2.Canon() {
-		t.Errorf("Canon: r1 != r2.Canon(), want ==")
+	if !r1.Eq(r2.Canon()) {
+		t.Errorf("Canon: %v != %v, want ==", r1, r2.Canon())
 	}
 }
