@@ -1,6 +1,7 @@
 package d3
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aurelien-rainone/math32"
@@ -33,7 +34,7 @@ func TestVec3Cross(t *testing.T) {
 		}
 
 		// obj-like api
-		Vec3Copy(dst, tt.v1)
+		tt.v1.Copyto(dst)
 		dst = dst.Cross(tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v x %v = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -59,14 +60,7 @@ func TestVec3Dot(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		// c-like api
-		got := Vec3Dot(tt.v1, tt.v2)
-		if !math32.Approx(tt.want, got) {
-			t.Errorf("%v . %v = %f, want %f", tt.v1, tt.v2, got, tt.want)
-		}
-
-		// obj-like api
-		got = tt.v1.Dot(tt.v2)
+		got := tt.v1.Dot(tt.v2)
 		if !math32.Approx(tt.want, got) {
 			t.Errorf("%v . %v = %f, want %f", tt.v1, tt.v2, got, tt.want)
 		}
@@ -102,7 +96,7 @@ func TestVec3SAdd(t *testing.T) {
 		}
 
 		// obj-like api
-		Vec3Copy(dst, tt.v1)
+		tt.v1.Copyto(dst)
 		dst.SAdd(tt.v2, tt.s)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v + (%.4g .%v) = %v, want %v", tt.v1, tt.s, tt.v2, dst, tt.want)
@@ -123,15 +117,15 @@ func TestVec3Add(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		// c-like api
+		// addition
 		dst := NewVec3()
 		Vec3Add(dst, tt.v1, tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v + %v = %v, want %v", tt.v1, tt.v2, dst, tt.want)
 		}
 
-		// obj-like api
-		Vec3Copy(dst, tt.v1)
+		// in-place addition
+		tt.v1.Copyto(dst)
 		dst.Add(tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v + %v = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -162,9 +156,8 @@ func TestVec3Min(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		// c-like api only
 		dst := NewVec3()
-		Vec3Copy(dst, tt.v1)
+		tt.v1.Copyto(dst)
 		Vec3Min(dst, tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("Vec3Min(%v, %v) = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -195,9 +188,8 @@ func TestVec3Max(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		// c-like api only
 		dst := NewVec3()
-		Vec3Copy(dst, tt.v1)
+		tt.v1.Copyto(dst)
 		Vec3Max(dst, tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("Vec3Max(%v, %v) = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -223,14 +215,7 @@ func TestVec3Dist(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		// c-like api
-		dist := Vec3Dist(tt.v1, tt.v2)
-		if !math32.Approx(dist, tt.want) {
-			t.Errorf("Vec3Dist(%v, %v) = %f, want %f", tt.v1, tt.v2, dist, tt.want)
-		}
-
-		// obj-like api
-		dist = tt.v1.Dist(tt.v2)
+		dist := tt.v1.Dist(tt.v2)
 		if !math32.Approx(dist, tt.want) {
 			t.Errorf("Vec3Dist(%v, %v) = %f, want %f", tt.v1, tt.v2, dist, tt.want)
 		}
@@ -255,46 +240,29 @@ func TestVec3DistSqr(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		// c-like api
-		dist := Vec3DistSqr(tt.v1, tt.v2)
-		if !math32.Approx(dist, tt.want) {
-			t.Errorf("Vec3DistSqr(%v, %v) = %f, want %f", tt.v1, tt.v2, dist, tt.want)
-		}
-
-		// obj-like api
-		dist = tt.v1.DistSqr(tt.v2)
+		dist := tt.v1.DistSqr(tt.v2)
 		if !math32.Approx(dist, tt.want) {
 			t.Errorf("Vec3DistSqr(%v, %v) = %f, want %f", tt.v1, tt.v2, dist, tt.want)
 		}
 	}
 }
 
-func TestVec3Normalize(t *testing.T) {
-	vecTests := []struct {
-		v1 Vec3
-	}{
-		{
-			Vec3{3, 3, 3},
-		},
+func TestVec3LenNormalize(t *testing.T) {
+	vecTests := []Vec3{
+		Vec3{3, 3, 3},
+		Vec3{113.53, -130423, 45454},
+		Vec3{0.000023, -1247030423, 1e-42},
+		Vec3{7e-23, 4e-25, 3e15},
 	}
 
-	for _, tt := range vecTests {
-		// c-like api
-		v := NewVec3()
-		Vec3Copy(v, tt.v1)
-		Vec3Normalize(v)
-		// check that dist between org and pt represented by v is 1
-		magn := Vec3Dist(NewVec3(), v)
+	for _, v := range vecTests {
+		dst := NewVec3()
+		v.Copyto(dst)
+		dst.Normalize()
+		magn := dst.Len()
+		fmt.Println(magn)
 		if !math32.Approx(magn, 1) {
-			t.Errorf("magnitude(Normalize(%v)) = %f, want 1", tt.v1, magn)
-		}
-
-		// obj-like api
-		Vec3Copy(v, tt.v1)
-		v.Normalize()
-		magn = NewVec3().Dist(v)
-		if !math32.Approx(magn, 1) {
-			t.Errorf("Vec3DistSqr(%v, %v) = %f, want 1", tt.v1, magn)
+			t.Errorf("Normalize(%v).Len() = %f, want 1", v, magn)
 		}
 	}
 }

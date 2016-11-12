@@ -74,7 +74,7 @@ func Vec3SAdd(dest, v1, v2 Vec3, s float32) {
 	dest[2] = v1[2] + v2[2]*s
 }
 
-// Vec3Sub Performs a vector subtraction. dest = v1 - v2.
+// Vec3Sub performs a vector subtraction. dest = v1 - v2.
 //
 //     dest  [out]  The result vector.
 //     v1    [in]   The base vector.
@@ -85,14 +85,15 @@ func Vec3Sub(dest, v1, v2 Vec3) {
 	dest[2] = v1[2] - v2[2]
 }
 
-// Vec3Copy performs a vector copy. dest = a
+// Vec3Scale scales a vector by value t. dest = v * t
 //
-//     dest [out]   The result.
-//     a    [in]    The vector to copy.
-func Vec3Copy(dest, a Vec3) {
-	dest[0] = a[0]
-	dest[1] = a[1]
-	dest[2] = a[2]
+//     dest  [out]  The result vector.
+//     v     [in]   The vector to scale.
+//     t     [in]   The scaling factor.
+func Vec3Scale(dest, v Vec3, t float32) {
+	dest[0] = v[0] * t
+	dest[1] = v[1] * t
+	dest[2] = v[2] * t
 }
 
 // Vec3Min selects the minimum value of each element from the specified vectors.
@@ -113,35 +114,6 @@ func Vec3Max(mx, v Vec3) {
 	mx[0] = math32.Max(mx[0], v[0])
 	mx[1] = math32.Max(mx[1], v[1])
 	mx[2] = math32.Max(mx[2], v[2])
-}
-
-// Vec3LenSqr derives the square of the scalar length of the vector. (len * len)
-func Vec3LenSqr(v Vec3) float32 {
-	return v[0]*v[0] + v[1]*v[1] + v[2]*v[2]
-}
-
-// Vec3Dist returns the distance between two points.
-func Vec3Dist(v1, v2 Vec3) float32 {
-	dx := v2[0] - v1[0]
-	dy := v2[1] - v1[1]
-	dz := v2[2] - v1[2]
-	return math32.Sqrt(dx*dx + dy*dy + dz*dz)
-}
-
-// Vec3DistSqr returns the square of the distance between two points.
-func Vec3DistSqr(v1, v2 Vec3) float32 {
-	dx := v2[0] - v1[0]
-	dy := v2[1] - v1[1]
-	dz := v2[2] - v1[2]
-	return dx*dx + dy*dy + dz*dz
-}
-
-// Vec3Normalize normalizes the vector.
-func Vec3Normalize(v Vec3) {
-	d := 1.0 / math32.Sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2])
-	v[0] *= d
-	v[1] *= d
-	v[2] *= d
 }
 
 // Vec3Lerp performs a linear interpolation between two vectors. v1 toward v2
@@ -167,43 +139,40 @@ func Vec3Cross(dest, v1, v2 Vec3) {
 	dest[2] = v1[0]*v2[1] - v1[1]*v2[0]
 }
 
-// Vec3Dot derives the dot product of two vectors. dest = v1 . v2
-//
-//     v1     [in]  A Vector.
-//     v2     [in]  A vector.
-func Vec3Dot(v1, v2 Vec3) float32 {
-	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
-}
-
 // Object-like Vec3 API
 ///////////////////////
 
-// Add performs a vector addition. v += v1
+// Add performs a vector addition (in-place). v += v1
 func (v Vec3) Add(v1 Vec3) {
 	v[0] += v1[0]
 	v[1] += v1[1]
 	v[2] += v1[2]
 }
 
-// SAdd performs a scaled vector addition. v += (v1 * s)
+// SAdd performs a scaled vector addition (in-place). v += (v1 * s)
 func (v Vec3) SAdd(v1 Vec3, s float32) {
 	v[0] += v1[0] * s
 	v[1] += v1[1] * s
 	v[2] += v1[2] * s
 }
 
-// Sub performs a vector subtraction. v -= v2.
+// Sub performs a vector subtraction (in-place). v -= v2.
 func (v Vec3) Sub(v1 Vec3) {
 	v[0] -= v1[0]
 	v[1] -= v1[1]
 	v[2] -= v1[2]
 }
 
-// Copy performs a vector copy. v1 = v
-func (v Vec3) Copy(v1 Vec3) {
+// Copyto performs a vector copy. v1 = v
+func (v Vec3) Copyto(v1 Vec3) {
 	v1[0] = v[0]
 	v1[1] = v[1]
 	v1[2] = v[2]
+}
+
+// LenSqr derives the scalar scalar length of the vector. (len)
+func (v Vec3) Len() float32 {
+	return math32.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])
 }
 
 // LenSqr derives the square of the scalar length of the vector. (len * len)
@@ -225,6 +194,25 @@ func (v Vec3) DistSqr(v1 Vec3) float32 {
 	dy := v1[1] - v[1]
 	dz := v1[2] - v[2]
 	return dx*dx + dy*dy + dz*dz
+}
+
+// Dist2D derives the distance between v and v2 on the xz-plane.
+//
+// The vectors are projected onto the xz-plane, so the y-values are ignored.
+func (v Vec3) Dist2D(v1 Vec3) float32 {
+	dx := v1[0] - v[0]
+	dz := v1[2] - v[2]
+	return math32.Sqrt(dx*dx + dz*dz)
+}
+
+// Dist2DSqr derives the square of the distance between v and v2 on the
+// xz-plane.
+//
+// The vectors are projected onto the xz-plane, so the y-values are ignored.
+func (v Vec3) Dist2DSqr(v1 Vec3) float32 {
+	dx := v1[0] - v[0]
+	dz := v1[2] - v[2]
+	return dx*dx + dz*dz
 }
 
 // Normalize normalizes the vector.
@@ -263,9 +251,20 @@ func (v Vec3) Dot(v1 Vec3) float32 {
 }
 
 // Vec3Dot2D derives the dot product of two vectors on the xz-plane. u . v
+//
 // The vectors are projected onto the xz-plane, so the y-values are ignored.
-func Vec3Dot2D(u, v Vec3) float32 {
-	return u[0]*v[0] + u[2]*v[2]
+func (v Vec3) Dot2D(u Vec3) float32 {
+	return v[0]*u[0] + v[2]*u[2]
+}
+
+// Perp2D derives the xz-plane 2D perp product of the two vectors. (uz*vx - ux*vz)
+//
+// u is the LHV vector [(x, y, z)]
+// v is the RHV vector [(x, y, z)]
+//
+// The vectors are projected onto the xz-plane, so the y-values are ignored.
+func (v Vec3) Perp2D(u Vec3) float32 {
+	return v[2]*u[0] - v[0]*u[2]
 }
 
 // Approx reports wether v and v1 are approximately equal.
