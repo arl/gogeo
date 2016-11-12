@@ -17,8 +17,39 @@ func NewVec3XYZ(x, y, z float32) Vec3 {
 	return Vec3{x, y, z}
 }
 
-// C-like Vec3 API
-//////////////////
+// component access
+
+// X returns the X component of v.
+func (v Vec3) X() float32 {
+	return v[0]
+}
+
+// Y returns the Y component of v.
+func (v Vec3) Y() float32 {
+	return v[1]
+}
+
+// Z returns the Z component of v.
+func (v Vec3) Z() float32 {
+	return v[2]
+}
+
+// X sets the X component of v.
+func (v Vec3) SetX(x float32) {
+	v[0] = x
+}
+
+// Y sets the Y component of v.
+func (v Vec3) SetY(y float32) {
+	v[1] = y
+}
+
+// Z sets the Z component of v.
+func (v Vec3) SetZ(z float32) {
+	v[2] = z
+}
+
+// Vec3 functions
 
 // Vec3Add performs a vector addition. dest = v1 + v2
 //
