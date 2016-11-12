@@ -6,13 +6,24 @@ import (
 	"github.com/aurelien-rainone/math32"
 )
 
+// Vec2 is a 2 dimensions vector. It is made up of a slice of 32 bits floating
+// points numbers.
+//
+// Depending on the context, a Vec2 can also represent a point in 2D space.
 type Vec2 []float32
 
+// NewVec2 allocates and returns a new Vec2 where each component has its zero
+// value.
 func NewVec2() Vec2 {
-	v := make(Vec2, 2)
-	return v
+	return make(Vec2, 2)
 }
 
+// NewVec2From allocates and returns a new Vec2 that is the copy of v1.
+func NewVec2From(v1 Vec2) Vec2 {
+	return Vec2{v1[0], v1[1]}
+}
+
+// NewVec2XY allocates and returns Vec2{x, y}.
 func NewVec2XY(x, y float32) Vec2 {
 	return Vec2{x, y}
 }
@@ -113,28 +124,48 @@ func Vec2Lerp(dest, v1, v2 Vec2, t float32) {
 
 // Vec2 methods
 
-// Add performs a vector addition (in-place). v += v1
-func (v Vec2) Add(v1 Vec2) {
-	v[0] += v1[0]
-	v[1] += v1[1]
+// Add returns a new vector that is the result of v + v1.
+//
+// It allocates a new vector/slice.
+func (v Vec2) Add(v1 Vec2) Vec2 {
+	return NewVec2XY(
+		v[0]+v1[0],
+		v[1]+v1[1],
+	)
 }
 
-// SAdd performs a scaled vector addition (in-place). v += (v1 * s)
-func (v Vec2) SAdd(v1 Vec2, s float32) {
-	v[0] += v1[0] * s
-	v[1] += v1[1] * s
+// SAdd returns a new vector that is the result of v + (v1 * s).
+//
+// It allocates a new vector/slice.
+func (v Vec2) SAdd(v1 Vec2, s float32) Vec2 {
+	return NewVec2XY(
+		v[0]+v1[0]*s,
+		v[1]+v1[1]*s,
+	)
 }
 
-// Sub performs a vector subtraction (in-place). v -= v2.
-func (v Vec2) Sub(v1 Vec2) {
-	v[0] -= v1[0]
-	v[1] -= v1[1]
+// Sub returns a new vector that is the result of v - v1.
+//
+// It allocates a new vector/slice.
+func (v Vec2) Sub(v1 Vec2) Vec2 {
+	return NewVec2XY(
+		v[0]-v1[0],
+		v[1]-v1[1],
+	)
 }
 
-// Copyto performs a vector copy. v1 = v
-func (v Vec2) Copyto(v1 Vec2) {
-	v1[0] = v[0]
-	v1[1] = v[1]
+// Scale returns a new vector that is the result of v * t
+func (v Vec2) Scale(t float32) Vec2 {
+	return NewVec2XY(
+		v[0]*t,
+		v[1]*t,
+	)
+}
+
+// Assign assign the component of v1 to v. v = v1
+func (v Vec2) Assign(v1 Vec2) {
+	v[0] = v1[0]
+	v[1] = v1[1]
 }
 
 // LenSqr derives the scalar scalar length of the vector. (len)
@@ -195,6 +226,9 @@ func (v Vec2) Approx(v1 Vec2) bool {
 
 // String returns a string representation of v like "(3,4)".
 func (v Vec2) String() string {
+	if len(v) < 2 {
+		return fmt.Sprintf("Vec2(!not-allocated)")
+	}
 	return fmt.Sprintf("(%.4g,%.4g)", v[0], v[1])
 }
 
