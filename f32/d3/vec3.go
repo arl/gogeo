@@ -139,8 +139,7 @@ func Vec3Cross(dest, v1, v2 Vec3) {
 	dest[2] = v1[0]*v2[1] - v1[1]*v2[0]
 }
 
-// Object-like Vec3 API
-///////////////////////
+// Vec3 methods
 
 // Add performs a vector addition (in-place). v += v1
 func (v Vec3) Add(v1 Vec3) {
