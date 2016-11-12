@@ -59,7 +59,7 @@ func SetMax(a *float32, b float32) {
 }
 
 // Round shortens a float32 value to a specified precision (number of digits
-// after the decimal point) with "round half up" tie-braking rule. Half-way
+// after the decimal point) with "round half up" tie-breaking rule. Half-way
 // values (23.5) are always rounded up (24).
 func Round(v float32, prec int) float32 {
 	p := float32(prec)

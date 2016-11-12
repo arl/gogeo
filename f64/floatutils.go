@@ -6,13 +6,11 @@
 
 package f64
 
-import (
-	"math"
-)
+import "math"
 
-// Clamp takes in a value and two thresholds. If the value is smaller than the low
-// threshold, it returns the low threshold. If it's bigger than the high threshold
-// it returns the high threshold. Otherwise it returns the value.
+// Clamp takes in a value and two thresholds. If the value is smaller than the
+// low threshold, it returns the low threshold. If it's bigger than the high
+// threshold it returns the high threshold. Otherwise it returns the value.
 //
 // Useful to prevent some functions from freaking out because a value was
 // technically out of range.
