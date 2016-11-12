@@ -34,7 +34,7 @@ func TestVec3Cross(t *testing.T) {
 		}
 
 		// obj-like api
-		tt.v1.Copyto(dst)
+		dst.Assign(tt.v1)
 		dst = dst.Cross(tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v x %v = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -96,8 +96,8 @@ func TestVec3SAdd(t *testing.T) {
 		}
 
 		// obj-like api
-		tt.v1.Copyto(dst)
-		dst.SAdd(tt.v2, tt.s)
+		dst.Assign(tt.v1)
+		dst = dst.SAdd(tt.v2, tt.s)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v + (%.4g .%v) = %v, want %v", tt.v1, tt.s, tt.v2, dst, tt.want)
 		}
@@ -125,8 +125,8 @@ func TestVec3Add(t *testing.T) {
 		}
 
 		// in-place addition
-		tt.v1.Copyto(dst)
-		dst.Add(tt.v2)
+		dst.Assign(tt.v1)
+		dst = dst.Add(tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("%v + %v = %v, want %v", tt.v1, tt.v2, dst, tt.want)
 		}
@@ -156,8 +156,7 @@ func TestVec3Min(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		dst := NewVec3()
-		tt.v1.Copyto(dst)
+		dst := NewVec3From(tt.v1)
 		Vec3Min(dst, tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("Vec3Min(%v, %v) = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -188,8 +187,7 @@ func TestVec3Max(t *testing.T) {
 	}
 
 	for _, tt := range vecTests {
-		dst := NewVec3()
-		tt.v1.Copyto(dst)
+		dst := NewVec3From(tt.v1)
 		Vec3Max(dst, tt.v2)
 		if !dst.Approx(tt.want) {
 			t.Errorf("Vec3Max(%v, %v) = %v, want %v", tt.v1, tt.v2, dst, tt.want)
@@ -256,8 +254,7 @@ func TestVec3LenNormalize(t *testing.T) {
 	}
 
 	for _, v := range vecTests {
-		dst := NewVec3()
-		v.Copyto(dst)
+		dst := NewVec3From(v)
 		dst.Normalize()
 		magn := dst.Len()
 		fmt.Println(magn)

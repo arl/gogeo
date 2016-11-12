@@ -6,13 +6,24 @@ import (
 	"github.com/aurelien-rainone/math32"
 )
 
+// Vec3 is a 3 dimensions vector. It is made up of a slice of 32 bits floating
+// points numbers.
+//
+// Depending on the context, a Vec3 can also represent a point in 3D space.
 type Vec3 []float32
 
+// NewVec3 allocates and returns a new Vec3 where each component has its zero
+// value.
 func NewVec3() Vec3 {
-	v := make(Vec3, 3)
-	return v
+	return make(Vec3, 3)
 }
 
+// NewVec3From allocates and returns a new Vec3 that is the copy of v1.
+func NewVec3From(v1 Vec3) Vec3 {
+	return Vec3{v1[0], v1[1], v1[2]}
+}
+
+// NewVec3XYZ allocates and returns Vec3{x, y, z}.
 func NewVec3XYZ(x, y, z float32) Vec3 {
 	return Vec3{x, y, z}
 }
@@ -141,32 +152,53 @@ func Vec3Cross(dest, v1, v2 Vec3) {
 
 // Vec3 methods
 
-// Add performs a vector addition (in-place). v += v1
-func (v Vec3) Add(v1 Vec3) {
-	v[0] += v1[0]
-	v[1] += v1[1]
-	v[2] += v1[2]
+// Add returns a new vector that is the result of v + v1.
+//
+// It allocates a new vector/slice.
+func (v Vec3) Add(v1 Vec3) Vec3 {
+	return NewVec3XYZ(
+		v[0]+v1[0],
+		v[1]+v1[1],
+		v[2]+v1[2],
+	)
 }
 
-// SAdd performs a scaled vector addition (in-place). v += (v1 * s)
-func (v Vec3) SAdd(v1 Vec3, s float32) {
-	v[0] += v1[0] * s
-	v[1] += v1[1] * s
-	v[2] += v1[2] * s
+// SAdd returns a new vector that is the result of v + (v1 * s).
+//
+// It allocates a new vector/slice.
+func (v Vec3) SAdd(v1 Vec3, s float32) Vec3 {
+	return NewVec3XYZ(
+		v[0]+v1[0]*s,
+		v[1]+v1[1]*s,
+		v[2]+v1[2]*s,
+	)
 }
 
-// Sub performs a vector subtraction (in-place). v -= v2.
-func (v Vec3) Sub(v1 Vec3) {
-	v[0] -= v1[0]
-	v[1] -= v1[1]
-	v[2] -= v1[2]
+// Sub returns a new vector that is the result of v - v1.
+//
+// It allocates a new vector/slice.
+func (v Vec3) Sub(v1 Vec3) Vec3 {
+	return NewVec3XYZ(
+		v[0]-v1[0],
+		v[1]-v1[1],
+		v[2]-v1[2],
+	)
 }
 
-// Copyto performs a vector copy. v1 = v
-func (v Vec3) Copyto(v1 Vec3) {
-	v1[0] = v[0]
-	v1[1] = v[1]
-	v1[2] = v[2]
+// Scale returns a new vector that is the result of v * t
+func (v Vec3) Scale(t float32) Vec3 {
+	return NewVec3XYZ(
+		v[0]*t,
+		v[1]*t,
+		v[2]*t,
+	)
+}
+
+// Assign assign the component of v1 to v. v = v1
+func (v Vec3) Assign(v1 Vec3) {
+	v[0] = v1[0]
+	v[1] = v1[1]
+	v[2] = v1[2]
 }
 
 // LenSqr derives the scalar scalar length of the vector. (len)
