@@ -3,7 +3,7 @@ package d2
 import "fmt"
 
 // Rectangler is the interface implemented by objects that can return a
-// rectangular representation of themselves.
+// rectangular representation of themselves in 2D space.
 type Rectangler interface {
 	Rectangle() Rectangle
 }
@@ -18,7 +18,7 @@ var ZR Rectangle
 
 func init() {
 	// allocate the vector of the ZR rectangle
-	ZR = Rectangle{Min: NewVec2(), Max: NewVec2()}
+	ZR = Rectangle{Min: Vec2{0, 0}, Max: Vec2{0, 0}}
 }
 
 // Rect is shorthand for Rectangle{Vec2(x0, y0), Vec2(x1, y1)}. The returned
@@ -51,8 +51,8 @@ func RectFromCircle(c Vec2, r float32) Rectangle {
 
 func NewRect() Rectangle {
 	return Rectangle{
-		Min: NewVec2(),
-		Max: NewVec2(),
+		Min: Vec2{0, 0},
+		Max: Vec2{0, 0},
 	}
 }
 
