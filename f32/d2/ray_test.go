@@ -35,7 +35,7 @@ func TestRay(t *testing.T) {
 	for _, tt := range tests {
 		got := tt.r.IntersectRect(tt.bb)
 		if got != tt.want {
-			t.Errorf("does rect %v and ray %v intersect? got %v, want %v", tt.bb, tt.r, got, tt.want)
+			t.Errorf("ray %v intersects rect %v? got %v, want %v", tt.r, tt.bb, got, tt.want)
 		}
 	}
 }
