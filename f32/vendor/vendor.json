@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "nLdgVVHbgK9RXSrHdVBl8IsrtAI=",
+			"path": "github.com/aurelien-rainone/math32",
+			"revision": "d6b24cfbfa40ff03dfec8b6105a9f8133ef3b215",
+			"revisionTime": "2016-11-10T01:38:43Z"
+		}
+	],
+	"rootPath": "github.com/aurelien-rainone/gogeo/f32"
+}
