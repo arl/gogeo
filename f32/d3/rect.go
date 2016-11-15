@@ -36,7 +36,7 @@ func Rect(x0, y0, z0, x1, y1, z1 float32) Rectangle {
 	if z0 > z1 {
 		z0, z1 = z1, z0
 	}
-	return Rectangle{Vec3{0, y0, z0}, Vec3{x1, y1, z1}}
+	return Rectangle{Vec3{x0, y0, z0}, Vec3{x1, y1, z1}}
 }
 
 // RectWHD returns a rectangle whose origin is Vec3{x,y,z}, w and h are its
