@@ -259,7 +259,7 @@ func (v Vec3) Normalize() {
 //
 // The interpolation factor t should be comprised betwenn 0 and 1.0.
 // [Limits: 0 <= value <= 1.0]
-func (v Vec3) Lerp(dest, v1 Vec3, t float32) Vec3 {
+func (v Vec3) Lerp(v1 Vec3, t float32) Vec3 {
 	return Vec3{
 		v[0] + (v1[0]-v[0])*t,
 		v[1] + (v1[1]-v[1])*t,
