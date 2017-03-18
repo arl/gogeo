@@ -233,7 +233,7 @@ func (v Vec2) String() string {
 }
 
 func (v *Vec2) Set(s string) error {
-	if _, err := fmt.Sscanf(s, "(%f,%f)", (*v)[0], (*v)[1]); err != nil {
+	if _, err := fmt.Sscanf(s, "%f,%f", (*v)[0], (*v)[1]); err != nil {
 		return fmt.Errorf("invalid syntax \"%s\"", s)
 	}
 	return nil
