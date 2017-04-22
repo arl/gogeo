@@ -164,6 +164,16 @@ func Vec3Cross(dest, v1, v2 Vec3) {
 	dest[2] = v1[0]*v2[1] - v1[1]*v2[0]
 }
 
+// Vec3Dist2DSqr derives the square of the distance between v1 and v2 on the
+// xz-plane.
+//
+// The vectors are projected onto the xz-plane, so the y-values are ignored.
+func Vec3Dist2DSqr(v1, v2 Vec3) float32 {
+	dx := v1[0] - v2[0]
+	dz := v1[2] - v2[2]
+	return dx*dx + dz*dz
+}
+
 // Vec3 methods
 
 // Add returns a new vector that is the result of v + v1.
