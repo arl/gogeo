@@ -64,6 +64,16 @@ func (v Vec3) SetZ(z float32) {
 
 // Vec3 functions
 
+// Vec3Copy performs a vector copy. dst = src
+//
+//     dst   [out] The destination vector.
+//     src    [in]  The source vector.
+func Vec3Copy(dst, src Vec3) {
+	dst[0] = src[0]
+	dst[1] = src[1]
+	dst[2] = src[2]
+}
+
 // Vec3Add performs a vector addition. dest = v1 + v2
 //
 //     dest   [out] The result vector.
@@ -175,6 +185,13 @@ func Vec3Dist2DSqr(v1, v2 Vec3) float32 {
 }
 
 // Vec3 methods
+
+// Copy copies the 3 vector components into dst.
+func (v Vec3) Copy(dst Vec3) {
+	dst[0] = v[0]
+	dst[1] = v[1]
+	dst[2] = v[2]
+}
 
 // Add returns a new vector that is the result of v + v1.
 //
