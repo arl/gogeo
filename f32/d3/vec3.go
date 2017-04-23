@@ -62,6 +62,13 @@ func (v Vec3) SetZ(z float32) {
 	v[2] = z
 }
 
+// SetXYZ sets the 3 components at once.
+func (v Vec3) SetXYZ(x, y, z float32) {
+	v[0] = x
+	v[1] = y
+	v[2] = z
+}
+
 // Vec3 functions
 
 // Vec3Copy performs a vector copy. dst = src
