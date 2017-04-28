@@ -20,7 +20,7 @@ type Rectangle struct {
 	Min, Max Vec
 }
 
-// Returns the center of r.
+// Center returns the center of r.
 func (r Rectangle) Center() Vec {
 	return r.Min.Add(r.Max.Div(2))
 }
