@@ -213,6 +213,20 @@ func (v Vec2) Lerp(dest, v1 Vec2, t float32) Vec2 {
 	}
 }
 
+// PerpCW returns the vector perpendicular to v
+//
+// (result of the clockwise 90° rotation of v through the origin)
+func (v Vec2) PerpCW() Vec2 {
+	return Vec2{v[1], -v[0]}
+}
+
+// PerpCCW returns the vector perpendicular to v
+//
+// (result of the counter-clockwise 90° rotation of v through the origin)
+func (v Vec2) PerpCCW() Vec2 {
+	return Vec2{-v[1], v[0]}
+}
+
 // Dot derives the dot product of two vectors. v . v1
 func (v Vec2) Dot(v1 Vec2) float32 {
 	return v[0]*v1[0] + v[1]*v1[1]
