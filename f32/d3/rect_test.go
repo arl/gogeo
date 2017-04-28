@@ -48,10 +48,10 @@ func TestRectangle(t *testing.T) {
 					r, s, a, a.Empty(), r.Overlaps(s))
 			}
 			largerThanA := [4]Rectangle{CopyRect(a), CopyRect(a), CopyRect(a), CopyRect(a)}
-			largerThanA[0].Min[0] -= 1
-			largerThanA[1].Min[1] -= 1
-			largerThanA[2].Max[0] += 1
-			largerThanA[3].Max[1] += 1
+			largerThanA[0].Min[0]--
+			largerThanA[1].Min[1]--
+			largerThanA[2].Max[0]++
+			largerThanA[3].Max[1]++
 			for i, b := range largerThanA {
 				if b.Empty() {
 					// b isn't actually larger than a.

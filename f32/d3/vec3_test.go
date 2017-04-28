@@ -1,7 +1,6 @@
 package d3
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/aurelien-rainone/math32"
@@ -257,7 +256,6 @@ func TestVec3LenNormalize(t *testing.T) {
 		dst := NewVec3From(v)
 		dst.Normalize()
 		magn := dst.Len()
-		fmt.Println(magn)
 		if !math32.Approx(magn, 1) {
 			t.Errorf("Normalize(%v).Len() = %f, want 1", v, magn)
 		}

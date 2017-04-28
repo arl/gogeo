@@ -7,13 +7,15 @@ import (
 
 //http://www.cs.utah.edu/~shirley/aabb/
 
-// ray, or line
+// A Ray is a line with an origin that extends infinitely in one direction.
 type Ray struct {
 	o    Vec // origin
 	v    Vec // unit direction vector
 	invv Vec // inv of unit direction vector
 }
 
+// NewRay creates a new Ray having the o as origin and v as direction of the
+// line.
 func NewRay(o, v Vec) Ray {
 	//v = v.Normalize()
 	return Ray{
@@ -23,14 +25,17 @@ func NewRay(o, v Vec) Ray {
 	}
 }
 
+// Origin returns the origin point of the ray.
 func (r Ray) Origin() Vec {
 	return r.o
 }
 
+// Direction returns the direction vector of the ray.
 func (r Ray) Direction() Vec {
 	return r.v
 }
 
+// IntersectRect indicates wether the ray intersects with the rectangle b.
 func (r Ray) IntersectRect(b Rectangle) bool {
 	t1 := (b.Min.X - r.o.X) * r.invv.X
 	t2 := (b.Max.X - r.o.X) * r.invv.X

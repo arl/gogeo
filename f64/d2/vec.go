@@ -122,9 +122,10 @@ func (v Vec) ApproxEpsilon(v2 Vec, threshold float64) bool {
 	return true
 }
 
-// ApproxFuncEq takes in a func that compares two floats, and uses it to do an
-// element-wise comparison of the vector to another. This is intended to be used
-// with FloatEqualFunc
+// ApproxFuncEqual takes in a func that compares two floats, and uses it to do
+// an element-wise comparison of the vector to another.
+//
+// This is intended to be used with FloatEqualFunc
 func (v Vec) ApproxFuncEqual(v2 Vec, eq func(float64, float64) bool) bool {
 	if !eq(v.X, v2.X) {
 		return false
@@ -135,7 +136,7 @@ func (v Vec) ApproxFuncEqual(v2 Vec, eq func(float64, float64) bool) bool {
 	return true
 }
 
-// Pt is shorthand for Vec{x, y}.
+// V is shorthand for Vec{x, y}.
 func V(x, y float64) Vec {
 	return Vec{x, y}
 }
@@ -145,6 +146,8 @@ func (v Vec) String() string {
 	return fmt.Sprintf("(%.4g,%.4g)", v.X, v.Y)
 }
 
+// Set sets the components of the vector from a string of the form
+// "float,float"
 func (v *Vec) Set(s string) error {
 	if _, err := fmt.Sscanf(s, "(%f,%f)", &v.X, &v.Y); err != nil {
 		return fmt.Errorf("invalid syntax \"%s\"", s)
@@ -152,6 +155,7 @@ func (v *Vec) Set(s string) error {
 	return nil
 }
 
-func (v Vec) MarshalText() (text []byte, err error) {
+// MarshalText marshall the vector to a byte slice.
+func (v Vec) MarshalText() ([]byte, error) {
 	return []byte(v.String()), nil
 }
