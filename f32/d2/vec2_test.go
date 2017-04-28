@@ -1,6 +1,7 @@
 package d2
 
 import (
+	"fmt"
 	"math"
 	"testing"
 
@@ -110,6 +111,34 @@ func TestVec2Len(t *testing.T) {
 		res := tt.v1.Len()
 		if res != tt.f {
 			t.Errorf("len(%v) => %v want %v", tt.v1, res, tt.f)
+		}
+	}
+}
+
+var vec2PerpTests = []struct {
+	v Vec2
+}{
+	{Vec2{1, 2}},
+	{Vec2{0, 0}},
+	{Vec2{-2, 3}},
+}
+
+func TestVec2PerpCW(t *testing.T) {
+	for _, tt := range vec2PerpTests {
+		res := tt.v.PerpCW().PerpCW().PerpCW().PerpCW()
+		fmt.Println(res)
+		if !res.Approx(tt.v) {
+			t.Errorf("4 x CW 90° rotations of (%v) => %v want %v", tt.v, res, tt.v)
+		}
+	}
+}
+
+func TestVec2PerpCCW(t *testing.T) {
+	for _, tt := range vec2PerpTests {
+		res := tt.v.PerpCCW().PerpCCW().PerpCCW().PerpCCW()
+		fmt.Println(res)
+		if !res.Approx(tt.v) {
+			t.Errorf("4 x CCW 90° rotations of (%v) => %v want %v", tt.v, res, tt.v)
 		}
 	}
 }
