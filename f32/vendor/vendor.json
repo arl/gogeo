@@ -3,11 +3,11 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "nLdgVVHbgK9RXSrHdVBl8IsrtAI=",
-			"path": "github.com/aurelien-rainone/math32",
-			"revision": "d6b24cfbfa40ff03dfec8b6105a9f8133ef3b215",
-			"revisionTime": "2016-11-10T01:38:43Z"
+			"checksumSHA1": "XIGeIGv06ulHthJPXtb7hGimdmM=",
+			"path": "github.com/arl/math32",
+			"revision": "cd6ed5833acf93b7e9d22d2d71c2e8ad4aa7f4fd",
+			"revisionTime": "2018-07-02T12:11:11Z"
 		}
 	],
-	"rootPath": "github.com/aurelien-rainone/gogeo/f32"
+	"rootPath": "github.com/arl/gogeo/f32"
 }

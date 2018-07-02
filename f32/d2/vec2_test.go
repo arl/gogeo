@@ -5,7 +5,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/aurelien-rainone/math32"
+	"github.com/arl/math32"
 )
 
 var vec2AddSubTests = []struct {

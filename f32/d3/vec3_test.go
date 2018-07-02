@@ -3,7 +3,7 @@ package d3
 import (
 	"testing"
 
-	"github.com/aurelien-rainone/math32"
+	"github.com/arl/math32"
 )
 
 func TestVec3Cross(t *testing.T) {

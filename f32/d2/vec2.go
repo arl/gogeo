@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aurelien-rainone/math32"
+	"github.com/arl/math32"
 )
 
 // Vec2 is a 2 dimensions vector. It is made up of a slice of 32 bits floating

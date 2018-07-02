@@ -12,7 +12,7 @@ function die() {
 }
 
 # list packages to be test and covered, one by line.
-readonly PACKAGES='github.com/aurelien-rainone/math32'
+readonly PACKAGES='github.com/arl/math32'
 
 # exclude files from coverage report/count (regex)
 readonly COVEREXCLUDES=''

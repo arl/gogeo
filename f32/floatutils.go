@@ -6,7 +6,7 @@
 
 package f32
 
-import "github.com/aurelien-rainone/math32"
+import "github.com/arl/math32"
 
 // Clamp takes in a value and two thresholds. If the value is smaller than the
 // low threshold, it returns the low threshold. If it's bigger than the high
