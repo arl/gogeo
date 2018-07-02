@@ -1,7 +1,8 @@
-# gogeo: Go geometry library &nbsp;&nbsp; [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/aurelien-rainone/gogeo) [![Build Status](https://travis-ci.org/aurelien-rainone/gogeo.svg?branch=master)](https://travis-ci.org/aurelien-rainone/gogeo) [![Coverage Status](https://coveralls.io/repos/github/aurelien-rainone/gogeo/badge.svg?branch=master)](https://coveralls.io/github/aurelien-rainone/gogeo?branch=master)
+# gogeo: Go geometry library
 
-**gogeo is a geometry library in Golang**
-
+[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/arl/gogeo)
+[![Build Status](https://travis-ci.org/arl/gogeo.svg?branch=master)](https://travis-ci.org/arl/gogeo)
+[![Coverage Status](https://coveralls.io/repos/github/arl/gogeo/badge.svg?branch=master)](https://coveralls.io/github/arl/gogeo?branch=master)
 
 ## License
 

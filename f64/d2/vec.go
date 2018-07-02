@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/aurelien-rainone/gogeo/f64"
+	"github.com/arl/gogeo/f64"
 )
 
 // Vec is an X, Y coordinate pair. The axes increase right and down.
