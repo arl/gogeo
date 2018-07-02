@@ -2,7 +2,7 @@
 
 [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/arl/gogeo)
 [![Build Status](https://travis-ci.org/arl/gogeo.svg?branch=master)](https://travis-ci.org/arl/gogeo)
-[![Coverage Status](https://coveralls.io/repos/github/arl/gogeo/badge.svg?branch=master)](https://coveralls.io/github/arl/gogeo?branch=master)
+[![Coverage](https://codecov.io/gh/arl/gogeo/branch/master/graph/badge.svg)](https://codecov.io/gh/arl/gogeo)
 
 ## License
 

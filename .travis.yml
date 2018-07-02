@@ -1,21 +1,25 @@
 language: go
 
-go: 
- - 1.6
- - 1.8
-
 sudo: false
+install: true
+
+go:
+ - "1.10"
+ - master
+
+matrix:
+  allow_failures:
+    - go: master
+  fast_finish: true
 
 before_script:
-  - go vet ./...
-
-before_install:
-- go get -u -v github.com/mattn/goveralls
-- go get -u -v github.com/wadey/gocovmerge
-- if ! go get -u -v github.com/golang/tools/cmd/cover; then go get -u -v golang.org/x/tools/cmd/cover; fi
-- go get -u -v github.com/golang/lint/golint
+  - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)
 
 script:
-# ./golint.bash
-- go test ./...
-- ./cover.sh
+  - test -z $(gofmt -s -l $GO_FILES)
+  - go vet ./...
+  - go test -v -race ./...
+  - go test -v -cover -covermode=count -coverprofile=coverage.txt ./... > /dev/null
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
