@@ -246,10 +246,10 @@ func TestVec3DistSqr(t *testing.T) {
 
 func TestVec3LenNormalize(t *testing.T) {
 	vecTests := []Vec3{
-		Vec3{3, 3, 3},
-		Vec3{113.53, -130423, 45454},
-		Vec3{0.000023, -1247030423, 1e-42},
-		Vec3{7e-23, 4e-25, 3e15},
+		{3, 3, 3},
+		{113.53, -130423, 45454},
+		{0.000023, -1247030423, 1e-42},
+		{7e-23, 4e-25, 3e15},
 	}
 
 	for _, v := range vecTests {
